@@ -6,8 +6,11 @@ __author__ = 'AYJk'
 import asyncio, logging
 import aiomysql
 
+logging.basicConfig(level=logging.INFO)
+
+
 def log(sql, args=()):
-    logging.info('SQL:%s', sql)
+    logging.info('SQL:%s' % sql)
 
 
 async def create_pool(loop, **kw):
@@ -19,7 +22,7 @@ async def create_pool(loop, **kw):
         user=kw['user'],
         password=kw['password'],
         db=kw['db'],
-        charset=kw.get('charset', 'utf-8'),
+        charset=kw.get('charset', 'utf8'),
         autocommit=kw.get('autocommit', True),
         maxsize=kw.get('maxsize', 10),
         minsize=kw.get('minsize', 1),
@@ -37,8 +40,8 @@ async def select(sql, args, size=None):
                 rs = await cur.fetchmany(size)
             else:
                 rs = await cur.fetchall()
-            logging.info('rows returned: %s' % len(rs))
-            return rs
+        logging.info('rows returned: %s' % len(rs))
+        return rs
 
 
 async def execute(sql, args, autocommit=True):
@@ -52,7 +55,7 @@ async def execute(sql, args, autocommit=True):
                 affected = cur.rowcount
             if not autocommit:
                 await coon.commit()
-        except:
+        except BaseException as e:
             if not autocommit:
                 await coon.roolback()
             raise
@@ -68,27 +71,27 @@ class Field(object):
         self.default = default
 
     def __str__(self):
-        return '<%s, %s:%s>' % (self.__class__.name, self.colum_type, self.name)
+        return '<%s, %s:%s>' % (self.__class__.__name__, self.column_type, self.name)
 
 
 class StringField(Field):
     def __init__(self, name=None, primary_key=False, default=None, ddl='varchar(100)'):
-        super().__init__(name, primary_key, default)
+        super().__init__(name, ddl, primary_key, default)
 
 
 class BooleanField(Field):
     def __init__(self, name=None, default=False):
-        super().__init__(name, 'boolean', default)
+        super().__init__(name, 'boolean', False, default)
 
 
 class IntegerField(Field):
     def __init__(self, name=None, primary_key=False, default=0):
-        super().__init__(name, primary_key, default)
+        super().__init__(name, 'bigint', primary_key, default)
 
 
 class FloatField(Field):
     def __init__(self, name=None, primary_key=False, default=0.0):
-        super().__init__(name, primary_key, default)
+        super().__init__(name, 'real', primary_key, default)
 
 
 class TextField(Field):
@@ -97,10 +100,10 @@ class TextField(Field):
 
 
 def create_args_string(num):
-    L = []
+    l = []
     for n in range(num):
-        L.append('?')
-        return ', '.join(L)
+        l.append('?')
+    return ', '.join(l)
 
 
 class ModelMetaclass(type):
@@ -110,7 +113,7 @@ class ModelMetaclass(type):
             return type.__new__(cls, name, bases, attrs)
         # 获取table名称
         tableName = attrs.get('__table__', None) or name
-        logging.info('found model: %s (table: %s)') % (name, tableName)
+        logging.info('found model: %s (table: %s)' % (name, tableName))
         # 获取所有的Field和主键名
         mappings = dict()
         fields = []
@@ -123,7 +126,7 @@ class ModelMetaclass(type):
                     # 找到主键
                     if primaryKey:
                         raise RuntimeError('Duplicate primary key for field: %s' % k)
-                    primarykey = k
+                    primaryKey = k
                 else:
                     fields.append(k)
         if not primaryKey:
@@ -159,24 +162,27 @@ class Model(dict, metaclass=ModelMetaclass):
         self[key] = value
 
     def getValue(self, key):
+        # 返回对象的属性，如果没有对应属性，则会调用__getattr__
         return getattr(self, key, None)
 
     def getValueOrDefault(self, key):
         value = getattr(self, key, None)
         if value is None:
-            field = self.__mapings__[key]
+            field = self.__mappings__[key]
             if field.default is not None:
                 value = field.default() if callable(field.default) else field.default
                 logging.debug('using default value for %s: %s' % (key, str(value)))
+                # 将默认值设置进行
                 setattr(self, key, value)
         return value
 
+    # 类方法第一个参数为cls，而实例方法第一个参数为self
     @classmethod
     async def findAll(cls, where=None, args=None, **kw):
         """find object by where clause"""
         sql = [cls.__select__]
         if where:
-            sql.append('order by')
+            sql.append('where')
             sql.append(where)
         if args is None:
             args = []
@@ -192,6 +198,7 @@ class Model(dict, metaclass=ModelMetaclass):
                 args.append(limit)
             elif isinstance(limit, tuple) and len(limit) == 2:
                 sql.append('?', '?')
+                # extend接受一个iterable参数
                 args.extend(limit)
             else:
                 raise ValueError('Invalid limit value: %s' % str(limit))
@@ -201,10 +208,12 @@ class Model(dict, metaclass=ModelMetaclass):
     @classmethod
     async def findNumber(cls, selectField, where=None, args=None):
         """find number by select and where"""
+        # 将列名重命名为_num_
         sql = ['select %s _num_ from `%s`' % (selectField, cls.__table__)]
         if where:
             sql.append('where')
             sql.append(where)
+            # 限制结果数为1
         rs = await select(' '.join(sql), args, 1)
         if len(rs) == 0:
             return None
@@ -219,6 +228,7 @@ class Model(dict, metaclass=ModelMetaclass):
         return cls(**rs[0])
 
     async def save(self):
+        # 获取所有value
         args = list(map(self.getValueOrDefault, self.__fields__))
         args.append(self.getValueOrDefault(self.__primary_key__))
         rows = await execute(self.__insert__, args)
@@ -238,7 +248,7 @@ class Model(dict, metaclass=ModelMetaclass):
         if rows != 1:
             logging.warning('faild to remove by primary key: affected rows: %s' % rows)
 
-    
+
 
 
 

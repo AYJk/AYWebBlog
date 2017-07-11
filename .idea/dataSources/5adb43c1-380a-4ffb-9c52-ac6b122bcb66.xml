@@ -11,121 +11,269 @@
     <schema id="5" parent="1" name="perfect_note"/>
     <schema id="6" parent="1" name="performance_schema"/>
     <schema id="7" parent="1" name="sys"/>
-    <table id="8" parent="2" name="EMPLOYEE"/>
-    <table id="9" parent="2" name="content"/>
-    <table id="10" parent="2" name="user"/>
-    <column id="11" parent="8" name="ID">
+    <schema id="8" parent="1" name="aywebblog">
+      <Visible>1</Visible>
+    </schema>
+    <table id="9" parent="2" name="EMPLOYEE"/>
+    <table id="10" parent="2" name="content"/>
+    <table id="11" parent="2" name="user"/>
+    <table id="12" parent="8" name="blogs"/>
+    <table id="13" parent="8" name="comments"/>
+    <table id="14" parent="8" name="users"/>
+    <column id="15" parent="9" name="ID">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="12" parent="8" name="FIRST_NAME">
+    <column id="16" parent="9" name="FIRST_NAME">
       <Position>2</Position>
       <DataType>char(20)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="13" parent="8" name="LAST_NAME">
+    <column id="17" parent="9" name="LAST_NAME">
       <Position>3</Position>
       <DataType>char(20)|0</DataType>
     </column>
-    <column id="14" parent="8" name="AGE">
+    <column id="18" parent="9" name="AGE">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="15" parent="8" name="SEX">
+    <column id="19" parent="9" name="SEX">
       <Position>5</Position>
       <DataType>char(1)|0</DataType>
     </column>
-    <column id="16" parent="8" name="INCOME">
+    <column id="20" parent="9" name="INCOME">
       <Position>6</Position>
       <DataType>float|0</DataType>
     </column>
-    <key id="17" parent="8" name="PRIMARY">
+    <key id="21" parent="9" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>ID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="18" parent="9" name="id">
+    <column id="22" parent="10" name="id">
       <Position>1</Position>
       <DataType>int(11) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="19" parent="9" name="title">
+    <column id="23" parent="10" name="title">
       <Position>2</Position>
       <DataType>varchar(30)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
     </column>
-    <column id="20" parent="9" name="content">
+    <column id="24" parent="10" name="content">
       <Position>3</Position>
       <DataType>text|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="21" parent="9" name="userID">
+    <column id="25" parent="10" name="userID">
       <Position>4</Position>
       <DataType>int(11) unsigned|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="22" parent="9" name="create_time">
+    <column id="26" parent="10" name="create_time">
       <Position>5</Position>
       <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <index id="23" parent="9" name="USER_FOREIGN_KEY">
+    <index id="27" parent="10" name="USER_FOREIGN_KEY">
       <ColNames>userID</ColNames>
     </index>
-    <key id="24" parent="9" name="PRIMARY">
+    <key id="28" parent="10" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="25" parent="9" name="USER_FOREIGN_KEY">
+    <foreign-key id="29" parent="10" name="USER_FOREIGN_KEY">
       <ColNames>userID</ColNames>
       <RefSchemaName>test</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="26" parent="10" name="id">
+    <column id="30" parent="11" name="id">
       <Position>1</Position>
       <Comment>用户Id</Comment>
       <DataType>int(11) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="27" parent="10" name="username">
+    <column id="31" parent="11" name="username">
       <Position>2</Position>
       <Comment>用户名</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
     </column>
-    <column id="28" parent="10" name="password">
+    <column id="32" parent="11" name="password">
       <Position>3</Position>
       <Comment>用户密码</Comment>
       <DataType>varchar(20)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
     </column>
-    <column id="29" parent="10" name="create_time">
+    <column id="33" parent="11" name="create_time">
       <Position>4</Position>
       <Comment>注册时间</Comment>
       <DataType>timestamp|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
     </column>
-    <column id="30" parent="10" name="sex">
+    <column id="34" parent="11" name="sex">
       <Position>5</Position>
       <Comment>1:男性 0:女性</Comment>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="31" parent="10" name="PRIMARY">
+    <key id="35" parent="11" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
+    </key>
+    <column id="36" parent="12" name="id">
+      <Position>1</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="37" parent="12" name="user_id">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="38" parent="12" name="user_name">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="39" parent="12" name="user_image">
+      <Position>4</Position>
+      <DataType>varchar(500)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="40" parent="12" name="name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="41" parent="12" name="summary">
+      <Position>6</Position>
+      <DataType>varchar(200)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="12" name="content">
+      <Position>7</Position>
+      <DataType>mediumtext|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="43" parent="12" name="created_at">
+      <Position>8</Position>
+      <DataType>double|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="44" parent="12" name="idx_created_at">
+      <ColNames>created_at</ColNames>
+    </index>
+    <key id="45" parent="12" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="46" parent="13" name="id">
+      <Position>1</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="47" parent="13" name="blog_id">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="48" parent="13" name="user_id">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="49" parent="13" name="user_name">
+      <Position>4</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="50" parent="13" name="user_image">
+      <Position>5</Position>
+      <DataType>varchar(500)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="51" parent="13" name="content">
+      <Position>6</Position>
+      <DataType>mediumtext|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="52" parent="13" name="created_at">
+      <Position>7</Position>
+      <DataType>double|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="53" parent="13" name="idx_created_at">
+      <ColNames>created_at</ColNames>
+    </index>
+    <key id="54" parent="13" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="55" parent="14" name="id">
+      <Position>1</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="56" parent="14" name="email">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="57" parent="14" name="passwd">
+      <Position>3</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="58" parent="14" name="admin">
+      <Position>4</Position>
+      <DataType>tinyint(1)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="59" parent="14" name="name">
+      <Position>5</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="60" parent="14" name="image">
+      <Position>6</Position>
+      <DataType>varchar(500)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="61" parent="14" name="created_at">
+      <Position>7</Position>
+      <DataType>double|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="62" parent="14" name="idx_created_at">
+      <ColNames>created_at</ColNames>
+    </index>
+    <index id="63" parent="14" name="idx_email">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="64" parent="14" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="65" parent="14" name="idx_email">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>idx_email</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>
